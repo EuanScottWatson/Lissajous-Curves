@@ -6,8 +6,8 @@ class Circle:
     def __init__(self, x, y, d_theta):
         self.x = x
         self.y = y
-        self.draw_x = x
-        self.draw_y = y - 50
+        self.draw_x = x + 50
+        self.draw_y = y
         self.angle = 0
         self.delta_theta = d_theta
 
@@ -26,6 +26,8 @@ class Lissajous:
             self.x_circles.append(Circle(210 + 120 * i, 70, math.pi / 2**(4+i)))
             self.y_circles.append(Circle(70, 210 + 120 * i, math.pi / 2**(4+i)))
 
+        self.sets_of_lines = [[[] for _ in range(len(self.x_circles))] for _ in range(len(self.y_circles))]
+
     def display(self, screen):
         for i in range(len(self.x_circles)):
             circle_x = self.x_circles[i]
@@ -35,6 +37,11 @@ class Lissajous:
             pygame.draw.circle(screen, (255, 255, 255), (circle_y.x, circle_y.y), 50, 1)
             pygame.draw.circle(screen, (255, 255, 255), (int(circle_y.draw_x), int(circle_y.draw_y)), 3, 0)
 
+        for j in range(len(self.y_circles)):
+            for i in range(len(self.x_circles)):
+                if len(self.sets_of_lines[j][i]) > 1:
+                    pygame.draw.lines(screen, (255, 255, 255), False, self.sets_of_lines[j][i], 2)
+
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -42,6 +49,8 @@ class Lissajous:
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return True
+                if event.key == K_r:
+                    self.sets_of_lines = [[[] for _ in range(len(self.x_circles))] for _ in range(len(self.y_circles))]
 
     def display_screen(self, screen):
         screen.fill((0, 0, 0))
@@ -55,6 +64,10 @@ class Lissajous:
         for i in range(len(self.x_circles)):
             self.x_circles[i].update()
             self.y_circles[i].update()
+
+        for j in range(len(self.y_circles)):
+            for i in range(len(self.x_circles)):
+                self.sets_of_lines[j][i].append([self.x_circles[i].draw_x, self.y_circles[j].draw_y])
 
 
 def main():
