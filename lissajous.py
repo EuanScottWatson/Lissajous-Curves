@@ -73,7 +73,7 @@ class Lissajous:
 def main():
     pygame.init()
     pygame.font.init()
-    pygame.display.set_caption("Arcade Machine")
+    pygame.display.set_caption("Lissajous Curves")
 
     os.environ['SDL_VIDEO_CENTERED'] = "True"
 
